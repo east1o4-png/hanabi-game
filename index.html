@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>ぼくの はなびたいかい</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;background:linear-gradient(#07152b,#12375c);color:#fff;min-height:100vh}button{font:inherit}.hidden{display:none!important}main{max-width:820px;margin:auto;padding:12px}.card{background:#102443;border-radius:22px;padding:14px;box-shadow:0 8px 25px #0003}.title{text-align:center;font-size:25px;font-weight:900;margin:4px}.sub{text-align:center;color:#bcd0e7;margin:6px 0 12px}.examples{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:8px 0}.ex{background:white;color:#172638;border-radius:8px;padding:5px 9px;font-size:20px;font-weight:900}.draw{height:220px;background:#fff;border:3px dashed #9cb5d4;border-radius:18px;overflow:hidden;position:relative}.draw.small{height:160px}.draw canvas{width:100%;height:100%;touch-action:none}.hint{position:absolute;inset:0;display:grid;place-items:center;color:#a8b4c2;font-size:25px;font-weight:900;pointer-events:none}.row{display:flex;gap:8px;margin-top:8px}.btn{min-height:50px;border:0;border-radius:14px;font-weight:900;flex:1}.primary{background:#ffd85a;color:#172638}.secondary{background:#edf4fb;color:#17304e}.numberGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px}.num{min-height:44px;border-radius:11px;border:1px solid #c3d2e3;background:#fff;color:#172638;font-weight:900;font-size:19px}.num:disabled{opacity:.25}.choiceTitle{font-weight:900;margin:14px 0 7px;color:#d7e7fa}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.choice{min-height:58px;border:2px solid transparent;border-radius:13px;background:#edf4fb;color:#17304e;font-weight:900;padding:5px}.choice.sel{border-color:#ffd85a}.colorDot{width:34px;height:34px;border-radius:50%;margin:auto}.shapeSvg{width:38px;height:38px;display:block;margin:auto}.counter,.queue{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;background:#07182f;border-radius:14px;padding:8px;min-height:44px}.slot{width:28px;height:28px;display:grid;place-items:center}.slot svg{width:26px;height:26px}.empty{width:18px;height:18px;border-radius:50%;border:2px solid #7188a4}.queue{background:transparent;padding:7px 0}.qitem{background:#07182f;border-radius:9px;padding:4px 7px;display:flex;align-items:center;gap:4px}.qitem svg{width:22px;height:22px}.status{text-align:center;color:#ffd85a;font-weight:900;min-height:28px;margin-top:8px}#show{position:fixed;inset:0;background:#020713;z-index:10}#fw{width:100%;height:100%;display:block}.hud{position:absolute;inset:0;pointer-events:none}.showCounter{position:absolute;left:8px;right:8px;bottom:14px;display:flex;justify-content:center;gap:5px;flex-wrap:wrap}.showDot{width:21px;height:21px}.showDot svg{width:21px;height:21px}.controls{position:absolute;right:10px;top:12px;display:flex;gap:7px;pointer-events:auto}.controls button{border:0;border-radius:11px;padding:9px;background:#fff;color:#17304e;font-weight:900}.countdown{position:absolute;inset:0;display:grid;place-items:center;font-size:min(30vw,130px);font-weight:1000;text-shadow:0 0 20px #9fd0ff}.finish{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-50%);background:#0c1e3aee;border-radius:20px;padding:18px;text-align:center}
+</style>
+</head>
+<body>
+<main>
+<section id="home">
+<div class="title">🎆 ぼくの はなびたいかい</div><div class="sub">かいた数字で、自分だけの花火をつくろう</div>
+<div class="card"><div class="title" style="font-size:22px">すきな数字をかこう！</div><div class="sub">0〜10 の見本を見て、花火の数をかいてね</div>
+<div class="examples"></div>
+<div class="draw"><canvas id="totalCanvas"></canvas><div id="totalHint" class="hint">ここに かいてね</div></div>
+<div class="row"><button id="clearTotal" class="btn secondary">けす</button><button id="confirmTotal" class="btn primary">かけた！</button></div>
+<div id="totalChooser" class="hidden"><div class="choiceTitle" style="text-align:center">かいた数字をえらんでね</div><div id="totalNums" class="numberGrid"></div></div></div>
+</section>
+
+<section id="design" class="hidden">
+<div class="title">🎨 はなびをつくろう</div><div id="designSub" class="sub"></div>
+<div class="card">
+<div class="choiceTitle" style="text-align:center">のこりの花火</div><div id="counter" class="counter"></div><div id="queue" class="queue"></div>
+<div class="choiceTitle">① いろをきめよう！</div><div id="colors" class="grid5"></div>
+<div class="choiceTitle">② かたちをきめよう！</div><div id="shapes" class="grid5"></div>
+<div class="choiceTitle">③ おと・ひらきかたをきめよう！</div><div id="sounds" class="grid3"></div>
+<div class="choiceTitle">④ この花火を なんこにする？</div><div style="text-align:center;color:#bcd0e7;font-size:13px;margin-bottom:5px">数字を書いて「かけた！」→ 下に出る数字を押して決定</div><div id="preview" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:8px"></div>
+<div class="draw small"><canvas id="countCanvas"></canvas><div id="countHint" class="hint">かずを かいてね</div></div>
+<div class="row"><button id="clearCount" class="btn secondary">けす</button><button id="confirmCount" class="btn primary">かけた！</button></div>
+<div id="countChooser" class="hidden"><div class="choiceTitle" style="text-align:center">かいた数字をえらんでね</div><div id="countNums" class="numberGrid"></div></div>
+<div id="status" class="status"></div>
+<button id="launch" class="btn primary hidden" style="width:100%;margin-top:8px">🎆 はなびたいかい スタート！</button>
+<button id="reset" class="btn secondary" style="width:100%;margin-top:8px">さいしょから</button>
+</div></section>
+</main>
+<section id="show" class="hidden"><canvas id="fw"></canvas><div class="hud"><div id="showCounter" class="showCounter"></div><div id="countdown" class="countdown"></div><div id="finish" class="finish hidden"><div class="title">🎉 だいせいこう！</div><div class="sub">じぶんでつくった花火大会だよ！</div><button id="home" class="btn primary" style="width:100%;margin-top:12px">ホームへ</button></div></div></section>
+<script>
+// 数字見本はJSで生成し直す（HTML内のテンプレート文字列対策）
+document.querySelector('.examples').innerHTML=[0,1,2,3,4,5,6,7,8,9,10].map(n=>`<span class="ex">${n}</span>`).join('');
+const COLORS=[['あお','#35a7ff'],['きいろ','#ffd84d'],['あか','#ff5c69'],['みどり','#46d887'],['むらさき','#b47cff']].map((x,i)=>({id:i,name:x[0],hex:x[1]}));
+const SHAPES=[['star','ほし'],['circle','まる'],['heart','ハート'],['square','しかく'],['triangle','さんかく']].map(x=>({id:x[0],name:x[1]}));
+const SOUNDS=[['boom','💥','ドーン'],['crackle','✨','パチパチ'],['whistle','🚀','ヒューン']].map(x=>({id:x[0],icon:x[1],name:x[2]}));
+let total=0,plan=[],selC=COLORS[0],selS=SHAPES[0],selA=SOUNDS[0];
+const $=id=>document.getElementById(id);
+function svg(shape,color){if(shape==='circle')return `<svg class="shapeSvg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="${color}"/></svg>`;if(shape==='square')return `<svg class="shapeSvg" viewBox="0 0 100 100"><rect x="18" y="18" width="64" height="64" rx="6" fill="${color}"/></svg>`;if(shape==='triangle')return `<svg class="shapeSvg" viewBox="0 0 100 100"><polygon points="50,13 88,82 12,82" fill="${color}"/></svg>`;if(shape==='heart')return `<svg class="shapeSvg" viewBox="0 0 100 100"><path d="M50 86 C20 66 8 52 8 32 C8 15 29 6 50 27 C71 6 92 15 92 32 C92 52 80 66 50 86Z" fill="${color}"/></svg>`;return `<svg class="shapeSvg" viewBox="0 0 100 100"><polygon points="50,7 61,36 92,37 67,56 76,87 50,69 24,87 33,56 8,37 39,36" fill="${color}"/></svg>`}
+function drawPad(canvas,hint){const c=$(canvas),h=$(hint),ctx=c.getContext('2d');let on=false,last=null;function size(){const r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);c.width=r.width*d;c.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=13;ctx.strokeStyle='#172638'}size();function p(e){const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}c.onpointerdown=e=>{on=true;last=p(e);h.classList.add('hidden');c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(!on)return;const q=p(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(q.x,q.y);ctx.stroke();last=q};c.onpointerup=()=>on=false;c.onpointercancel=()=>on=false;return{clear(){ctx.clearRect(0,0,c.width,c.height);h.classList.remove('hidden')},size}}
+const totalPad=drawPad('totalCanvas','totalHint'),countPad=drawPad('countCanvas','countHint');
+function nums(el,max,cb){el.innerHTML='';for(let n=0;n<=10;n++){const b=document.createElement('button');b.className='num';b.textContent=n;b.disabled=n>max;b.onclick=()=>cb(n);el.appendChild(b)}}
+$('clearTotal').onclick=()=>totalPad.clear();$('clearCount').onclick=()=>countPad.clear();
+$('confirmTotal').onclick=()=>{$('totalChooser').classList.remove('hidden');nums($('totalNums'),10,n=>{if(n===0)return alert('1〜10 にしてね！');total=n;plan=[];$('home').classList.add('hidden');$('design').classList.remove('hidden');$('designSub').textContent=`ぜんぶで ${n}はつ。いろ・かたち・おとを決めよう！`;requestAnimationFrame(()=>{countPad.size();countPad.clear();render();window.scrollTo(0,0)});})};
+function remain(){return total-plan.reduce((s,x)=>s+x.count,0)}
+function render(){
+$('colors').innerHTML='';COLORS.forEach(x=>{const b=document.createElement('button');b.className='choice'+(selC.id===x.id?' sel':'');b.innerHTML=`<div class="colorDot" style="background:${x.hex}"></div>${x.name}`;b.onclick=()=>{selC=x;render()};$('colors').appendChild(b)});
+$('shapes').innerHTML='';SHAPES.forEach(x=>{const b=document.createElement('button');b.className='choice'+(selS.id===x.id?' sel':'');b.innerHTML=svg(x.id,'#17304e')+x.name;b.onclick=()=>{selS=x;render()};$('shapes').appendChild(b)});
+$('sounds').innerHTML='';SOUNDS.forEach(x=>{const b=document.createElement('button');b.className='choice'+(selA.id===x.id?' sel':'');b.innerHTML=`<div style="font-size:24px">${x.icon}</div>${x.name}`;b.onclick=()=>{selA=x;render();previewSound(x.id)};$('sounds').appendChild(b)});
+$('preview').innerHTML=`<div style="width:55px">${svg(selS.id,selC.hex)}</div><b>${selC.name}の${selS.name}<br><span style="color:#ffd85a">${selA.name}</span></b>`;
+let filled=[];plan.forEach(x=>{for(let i=0;i<x.count;i++)filled.push(x)});$('counter').innerHTML='';for(let i=0;i<total;i++){const d=document.createElement('div');d.className='slot';d.innerHTML=filled[i]?svg(filled[i].shape.id,filled[i].color.hex):'<div class="empty"></div>';$('counter').appendChild(d)}
+$('queue').innerHTML='';plan.forEach((x,i)=>{const d=document.createElement('div');d.className='qitem';d.innerHTML=svg(x.shape.id,x.color.hex)+`×${x.count} ${x.sound.icon}`;d.onclick=()=>{plan.splice(i,1);render()};$('queue').appendChild(d)});
+$('launch').classList.toggle('hidden',remain()!==0);$('confirmCount').disabled=remain()===0;$('status').textContent=remain()===0?'ぜんぶ できた！ はなびたいかいを はじめよう！':`のこり ${remain()}こ`;
+}
+$('confirmCount').onclick=()=>{if(remain()<=0)return;countPad.size();$('countChooser').classList.remove('hidden');nums($('countNums'),remain(),n=>{if(n===0)return;$('countChooser').classList.add('hidden');plan.push({color:{...selC},shape:{...selS},sound:{...selA},count:n});countPad.clear();render();setTimeout(()=>document.querySelector('.choiceTitle').scrollIntoView({behavior:'smooth',block:'start'}),50)});setTimeout(()=>$('countChooser').scrollIntoView({behavior:'smooth',block:'center'}),80)};
+$('reset').onclick=()=>{if(confirm('さいしょから？'))location.reload()};
+let AC=null;function ac(){if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}function boom(v=.5){const c=ac(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime;o.frequency.setValueAtTime(90,t);o.frequency.exponentialRampToValueAtTime(35,t+.5);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.connect(g).connect(c.destination);o.start();o.stop(t+.65)}function crack(){const c=ac();for(let i=0;i<8;i++){const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+i*.04;o.type='square';o.frequency.value=900+Math.random()*1100;g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.05);o.connect(g).connect(c.destination);o.start(t);o.stop(t+.06)}}function whistle(){const c=ac(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime;o.frequency.setValueAtTime(550,t);o.frequency.exponentialRampToValueAtTime(1500,t+.55);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.18,t+.08);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.connect(g).connect(c.destination);o.start();o.stop(t+.62)}function previewSound(id){if(id==='boom')boom(.18);else if(id==='crackle')crack();else whistle()}
+const fc=$('fw'),ctx=fc.getContext('2d');let rockets=[],parts=[],items=[],idx=0,running=false,timer=null,anim=null;function resize(){fc.width=innerWidth*devicePixelRatio;fc.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}window.onresize=()=>{resize();totalPad.size();if(!$('design').classList.contains('hidden'))countPad.size()};resize();
+function pts(shape,n=52){const a=[];if(shape==='circle'){for(let i=0;i<n;i++){let t=i/n*Math.PI*2;a.push([Math.cos(t),Math.sin(t)])}}else if(shape==='heart'){for(let i=0;i<n;i++){let t=i/n*Math.PI*2;a.push([16*Math.sin(t)**3/17,-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))/17])}}else if(shape==='triangle'){const v=[[0,-1],[.9,.65],[-.9,.65]];for(let i=0;i<n;i++){let s=i/n*3,k=Math.floor(s),u=s-k;a.push([v[k][0]+(v[(k+1)%3][0]-v[k][0])*u,v[k][1]+(v[(k+1)%3][1]-v[k][1])*u])}}else if(shape==='square'){const v=[[-1,-1],[1,-1],[1,1],[-1,1]];for(let i=0;i<n;i++){let s=i/n*4,k=Math.floor(s),u=s-k;a.push([v[k][0]+(v[(k+1)%4][0]-v[k][0])*u,v[k][1]+(v[(k+1)%4][1]-v[k][1])*u])}}else{let v=[];for(let i=0;i<10;i++){let t=-Math.PI/2+i*Math.PI/5,r=i%2?0.42:1;v.push([Math.cos(t)*r,Math.sin(t)*r])}for(let i=0;i<n;i++){let s=i/n*10,k=Math.floor(s),u=s-k;a.push([v[k][0]+(v[(k+1)%10][0]-v[k][0])*u,v[k][1]+(v[(k+1)%10][1]-v[k][1])*u])}}return a}
+function explode(x,y,it){
+  // 音は選んだ種類に応じて変える
+  if(it.sound.id==='boom') boom(.62);
+  else if(it.sound.id==='crackle'){boom(.28);crack()}
+  else {boom(.38);crack()}
+
+  // 選んだ形の輪郭を、そのまま夜空に描く。
+  // 速度差を小さくして、★・♡・□・△が丸く崩れないようにする。
+  const outline=pts(it.shape.id,it.sound.id==='crackle'?90:66);
+  const scale=Math.min(innerWidth,innerHeight)*(it.sound.id==='boom'?.105:.09);
+  const drift=it.sound.id==='crackle'?0.30:0.18;
+
+  outline.forEach((p,i)=>{
+    const px=x+p[0]*scale;
+    const py=y+p[1]*scale;
+    const outward=.20+(it.sound.id==='boom'?.18:.08);
+    parts.push({
+      x:px,
+      y:py,
+      vx:p[0]*outward+(Math.random()-.5)*drift,
+      vy:p[1]*outward+(Math.random()-.5)*drift,
+      life:1,
+      decay:it.sound.id==='crackle'?.012:.009,
+      color:it.color.hex,
+      size:it.sound.id==='crackle'?2.0:2.8,
+      sparkle:it.sound.id==='crackle'
+    });
+  });
+
+  // ドーンだけ中心から少数の補助粒子を飛ばすが、色は必ず選択色。
+  if(it.sound.id==='boom'){
+    for(let i=0;i<18;i++){
+      const a=i/18*Math.PI*2;
+      parts.push({x,y,vx:Math.cos(a)*1.1,vy:Math.sin(a)*1.1,life:.7,decay:.018,color:it.color.hex,size:1.8});
+    }
+  }
+}
+function loop(){ctx.fillStyle='rgba(2,7,19,.25)';ctx.fillRect(0,0,innerWidth,innerHeight);for(let i=rockets.length-1;i>=0;i--){let r=rockets[i];r.t+=16;let u=Math.min(1,r.t/r.d);r.y=innerHeight+(r.ty-innerHeight)*(1-(1-u)*(1-u));ctx.fillStyle=r.it.color.hex;ctx.shadowBlur=8;ctx.shadowColor=r.it.color.hex;ctx.beginPath();ctx.arc(r.x,r.y,2.8,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(u>=1){explode(r.x,r.y,r.it);rockets.splice(i,1)}}for(let i=parts.length-1;i>=0;i--){let p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.009;p.vx*=.994;p.life-=p.decay||.012;ctx.globalAlpha=Math.max(0,p.life)*(p.sparkle?(0.55+Math.random()*.45):1);ctx.fillStyle=p.color;ctx.shadowBlur=10;ctx.shadowColor=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size||2.4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(p.life<=0)parts.splice(i,1)}ctx.globalAlpha=1;if(running||rockets.length||parts.length)anim=requestAnimationFrame(loop)}
+function renderSC(){let e=$('showCounter');e.innerHTML='';items.forEach((it,i)=>{let d=document.createElement('div');d.className='showDot';d.style.opacity=i<idx?'.2':'1';d.innerHTML=svg(it.shape.id,it.color.hex);e.appendChild(d)})}
+function nextFire(){if(!running)return;if(idx>=items.length){running=false;setTimeout(()=>$('finish').classList.remove('hidden'),1000);return}let it=items[idx++];if(it.sound.id==='whistle')whistle();rockets.push({x:innerWidth*(.2+Math.random()*.6),y:innerHeight,ty:innerHeight*(.18+Math.random()*.28),t:0,d:it.sound.id==='whistle'?1100:800,it});renderSC();timer=setTimeout(nextFire,it.sound.id==='whistle'?1400:1150)}
+async function startShow(){try{ac()}catch(e){}$('design').classList.add('hidden');$('show').classList.remove('hidden');$('finish').classList.add('hidden');resize();ctx.fillStyle='#020713';ctx.fillRect(0,0,innerWidth,innerHeight);items=[];plan.forEach(x=>{for(let i=0;i<x.count;i++)items.push(JSON.parse(JSON.stringify(x)))});idx=0;running=true;rockets=[];parts=[];renderSC();cancelAnimationFrame(anim);loop();for(const v of ['3','2','1','🎆']){$('countdown').textContent=v;await new Promise(r=>setTimeout(r,600))}$('countdown').textContent='';nextFire()}
+$('launch').onclick=startShow;$('home').onclick=()=>{running=false;clearTimeout(timer);location.reload()};render();
+</script>
+</body></html>
